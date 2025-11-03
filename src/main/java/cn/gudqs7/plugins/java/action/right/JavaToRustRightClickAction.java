@@ -1,9 +1,19 @@
 package cn.gudqs7.plugins.java.action.right;
 
 import cn.gudqs7.plugins.java.action.base.AbstractJavaRightClickAction;
+import cn.gudqs7.plugins.rust.util.StringTool;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
 
@@ -28,7 +38,114 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
      */
     @Override
     protected String handlePsiClass0(Project project, PsiClass psiClass) {
+        StringBuilder structSbf = new StringBuilder();
+        Set<String> hasGenSet = new HashSet<>();
+        generateByPsiClass(psiClass, structSbf, hasGenSet);
+        return structSbf.toString();
+    }
 
-        return "开发中";
+    private static void generateByPsiClass(PsiClass psiClass, StringBuilder structSbf, Set<String> hasGenSet) {
+        String className = psiClass.getName();
+        if (className == null) {
+            return;
+        }
+        if (hasGenSet.contains(className)) {
+            return;
+        }
+        hasGenSet.add(className);
+
+        structSbf.append("\n#[derive(Serialize, Deserialize, Clone, Debug, Default)]\n");
+        structSbf.append("#[serde(rename_all = \"camelCase\")]\n");
+        structSbf.append("pub struct ").append(className).append(" {\n");
+
+        List<PsiClass> waitList = new ArrayList<>();
+
+        PsiField[] allFields = psiClass.getAllFields();
+        for (PsiField psiField : allFields) {
+            String fieldName = psiField.getName();
+            PsiType psiType = psiField.getType();
+            String typeName = psiType.getPresentableText();
+
+            if (psiType instanceof PsiClassReferenceType psiClassReferenceType) {
+                PsiClass resolveClass = psiClassReferenceType.resolve();
+                waitList.add(resolveClass);
+            }
+
+            System.out.println("fieldName = " + fieldName);
+            System.out.println("typeName = " + typeName);
+
+            String rustType = "Option<" + typeName + ">";
+            switch (typeName) {
+                case "Byte":
+                    rustType = "Option<i8>";
+                    break;
+                case "Short":
+                    rustType = "Option<i16>";
+                    break;
+                case "Integer":
+                    rustType = "Option<i32>";
+                    break;
+                case "Long":
+                    rustType = "Option<i64>";
+                    break;
+                case "Float":
+                    rustType = "Option<f32>";
+                    break;
+                case "Double":
+                    rustType = "Option<f64>";
+                    break;
+                case "Boolean":
+                    rustType = "Option<bool>";
+                    break;
+                case "String":
+                case "Date":
+                    rustType = "Option<String>";
+                    break;
+                case "byte":
+                    rustType = "i8";
+                    break;
+                case "short":
+                    rustType = "i16";
+                    break;
+                case "int":
+                    rustType = "i32";
+                    break;
+                case "long":
+                    rustType = "i64";
+                    break;
+                case "float":
+                    rustType = "f32";
+                    break;
+                case "double":
+                    rustType = "f64";
+                    break;
+                case "boolean":
+                    rustType = "bool";
+                    break;
+                default:
+                    break;
+            }
+
+            structSbf.append("    ").append(StringTool.camelCaseToLine(fieldName))
+                    .append(": ").append(rustType).append(",\n");
+        }
+        structSbf.append("}\n");
+
+        for (PsiClass aClass : waitList) {
+            if (isNotSystemClass(aClass)) {
+                generateByPsiClass(aClass, structSbf, hasGenSet);
+            }
+        }
+    }
+
+    public static boolean isNotSystemClass(PsiClass psiClass) {
+        if (psiClass == null) {
+            return false;
+        }
+        String qualifiedName = psiClass.getQualifiedName();
+        if (StringUtils.isBlank(qualifiedName)) {
+            return false;
+        }
+        return !qualifiedName.startsWith("java.");
     }
 }

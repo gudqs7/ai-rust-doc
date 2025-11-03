@@ -20,5 +20,5 @@ public class PsiDocumentUtil {
             FileDocumentManager.getInstance().saveDocument(document);
         }
     }
-
+    
 }

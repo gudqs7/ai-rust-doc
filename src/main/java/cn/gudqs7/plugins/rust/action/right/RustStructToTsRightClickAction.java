@@ -5,7 +5,6 @@ import cn.gudqs7.plugins.rust.util.StringTool;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.rust.lang.core.psi.*;
 
 import java.util.HashSet;
@@ -63,20 +62,18 @@ public class RustStructToTsRightClickAction extends AbstractRustRightClickAction
     private void genFieldByNameFieldList(List<RsNamedFieldDecl> namedFieldDeclList, StringBuilder tsSbf, String space, String renameType) {
         for (RsNamedFieldDecl namedFieldDecl : namedFieldDeclList) {
             String fieldName = namedFieldDecl.getName();
-            TsTypeResult result = getTsTypeResult(namedFieldDecl.getTypeReference());
-            if (result == null) {
+            RsTypeReference typeReference = namedFieldDecl.getTypeReference();
+            if (typeReference == null) {
                 continue;
             }
+            // todo typeReference 是 struct 时遍历
+            TsTypeResult result = getTsTypeResult(typeReference);
             tsSbf.append(space).append(StringTool.rename(fieldName, renameType)).append(result.optStr())
                     .append(": ").append(result.tsType()).append(";\n");
         }
     }
 
-    private @Nullable TsTypeResult getTsTypeResult(RsTypeReference typeReference) {
-        if (typeReference == null) {
-            return null;
-        }
-        // todo typeReference 是 struct 时遍历
+    private @NotNull TsTypeResult getTsTypeResult(@NotNull RsTypeReference typeReference) {
         String type = typeReference.getText();
 
         String tsType = type;
@@ -170,10 +167,8 @@ public class RustStructToTsRightClickAction extends AbstractRustRightClickAction
                     boolean singleTuple = tupleSize == 1;
                     if (singleTuple) {
                         RsTupleFieldDecl rsTupleFieldDecl = tupleFieldDeclList.get(0);
-                        TsTypeResult tsTypeResult = getTsTypeResult(rsTupleFieldDecl.getTypeReference());
-                        if (tsTypeResult == null) {
-                            tsTypeResult = new TsTypeResult("null", "");
-                        }
+                        RsTypeReference typeReference = rsTupleFieldDecl.getTypeReference();
+                        TsTypeResult tsTypeResult = getTsTypeResult(typeReference);
                         if (notInnerMode) {
                             tsSbf.append("    ").append(serdeInfo.serdeContent()).append(tsTypeResult.optStr())
                                     .append(": ").append(tsTypeResult.tsType()).append(";\n");
@@ -189,9 +184,6 @@ public class RustStructToTsRightClickAction extends AbstractRustRightClickAction
                         for (int i = 0; i < tupleSize; i++) {
                             RsTupleFieldDecl rsTupleFieldDecl = tupleFieldDeclList.get(i);
                             TsTypeResult tsTypeResult = getTsTypeResult(rsTupleFieldDecl.getTypeReference());
-                            if (tsTypeResult == null) {
-                                continue;
-                            }
                             String tsType = tsTypeResult.tsType();
                             if (notInnerMode) {
                                 if (typeSet.contains(tsType)) {

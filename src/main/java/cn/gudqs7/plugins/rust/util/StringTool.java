@@ -47,4 +47,30 @@ public class StringTool {
         return result.toString();
     }
 
+    public static String camelCaseToLine(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < str.length(); i++) {
+            char currentChar = str.charAt(i);
+
+            // 如果当前字符是大写字母
+            if (Character.isUpperCase(currentChar)) {
+                // 如果不是第一个字符，在前面添加下划线
+                if (i > 0) {
+                    result.append('_');
+                }
+                // 将大写字母转换为小写
+                result.append(Character.toLowerCase(currentChar));
+            } else {
+                // 小写字母或数字，直接添加
+                result.append(currentChar);
+            }
+        }
+
+        return result.toString();
+    }
 }
