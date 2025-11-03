@@ -1,10 +1,8 @@
 package cn.gudqs7.plugins.common.util.jetbrain;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,9 +39,9 @@ public class IdeaApplicationUtil {
 
     }
 
-    public static void runReadAction(@NotNull ThrowableRunnable<Throwable> action) {
+    public static void runReadAction(@NotNull Runnable action) {
         try {
-            ReadAction.run(action);
+            ApplicationManager.getApplication().runReadAction(action);
         } catch (Throwable throwable) {
             ExceptionUtil.handleException(throwable);
         }

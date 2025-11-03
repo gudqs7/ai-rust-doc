@@ -1,35 +1,16 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<p><b>Generate Rust function documentation using DeepSeek.</b></p>
+<p>
+    <li>Right-click to generate for a single method</li>
+    <li>Right-click to generate for a file</li>
+    <li>Right-click to generate for multiple files or directories</li>
+    <li>Please configure the environment variable RUST_SAVIOR_AI_SK first</li>
+    <li>Additionally supports generating TypeScript interfaces or types from Rust structs/enums</li>
+</p>
+<p>
+    <li>支持单个方法右键生成</li>
+    <li>支持文件右键生成</li>
+    <li>支持多个文件或目录右键生成</li>
+    <li>请先配置环境变量 RUST_SAVIOR_AI_SK </li>
+    <li>另外支持 rust struct/enum 生成ts的interface或type</li>
+</p>
 
-<!-- a short description into h2! -->
-<h2>Similar to GenerateAllSetter, but triggered by a suffix (i.e. similar to .var usage)!</h2>
-<!-- a list of what this plugin can do -->
-<ul>
-    <li>
-        Generate all setters via .allset after the pojo variable
-    </li>
-    <li>
-        Generate all setters via .allsetn after pojo variables (but without default values)
-    </li>
-</ul>
-
-<!-- 下面的留着第二次发版时修改 -->
-<!--
-
-<a href="https://github.com/docer-savior/docer-savior-idea-plugin">GitHub</a> |
-<a href="https://github.com/docer-savior/docer-savior-idea-plugin/issues">Issues</a> |
-<a href="https://github.com/docer-savior/docer-savior-idea-plugin/wiki/%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B">Get Started</a> |
-<a href="https://github.com/docer-savior/docer-savior-idea-plugin/blob/master/LICENSE">LICENSE</a>
-<br/>
-
-<hr/>
-
-<p>若图片显示不全，请<a href="https://github.com/docer-savior/docer-savior-idea-plugin/blob/master/README.md">点此打开</a>到网页上查看</p>
-
-<p><a href="https://github.com/docer-savior/docer-savior-idea-plugin/blob/master/README_EN.md">English 🇺🇸</a></p>
-
-todo 替换 docer-savior/docer-savior-idea-plugin
-
-<h2>1.安装插件</h2>
-<p>快点击 Install 吧!</p>
-
--->

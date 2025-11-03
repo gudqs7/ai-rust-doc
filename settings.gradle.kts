@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "idea-plugin-template"
+rootProject.name = "ai-rust-doc"

@@ -2,6 +2,7 @@ package cn.gudqs7.plugins.common.util.jetbrain;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 
 /**
@@ -11,13 +12,13 @@ import com.intellij.psi.PsiDocumentManager;
  */
 public class PsiDocumentUtil {
 
-    public static void commitAndSaveDocument(PsiDocumentManager psiDocumentManager, Document document) {
+    public static void commitAndSaveDocumentEx(Document document, Project project) {
         if (document != null) {
+            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
             psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
             psiDocumentManager.commitDocument(document);
             FileDocumentManager.getInstance().saveDocument(document);
         }
     }
-
 
 }

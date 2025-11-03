@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>gudqs7.github.io.xxx</id>
-    <name>Xxx</name>
+    <id>gudqs7.github.io.rust.doc</id>
+    <name>AI Rust Doc</name>
     <vendor email="gudqs7@gmail.com" url="https://github.com/gudqs7">gudqs7</vendor>
 
     <description><![CDATA[ Description will be added by gradle build]]></description>
@@ -16,10 +16,10 @@
 
 
     <extensions defaultExtensionNs="com.intellij">
-        <notificationGroup displayType="BALLOON" id="Api Savior Tip" bundle="group" key="notification.group.tip.name"/>
-        <notificationGroup displayType="STICKY_BALLOON" id="Api Savior Error" bundle="group" key="notification.group.error.name"/>
+        <notificationGroup displayType="BALLOON" id="AiRustDoc Tip" bundle="group" key="notification.group.tip.name"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="AiRustDoc Error" bundle="group" key="notification.group.error.name"/>
 
-        <errorHandler implementation="cn.gudqs7.plugins.diagnostic.XxxIssueSubmitter"/>
+        <errorHandler implementation="cn.gudqs7.plugins.diagnostic.AiRustDocIssueSubmitter"/>
     </extensions>
 
     <actions>
