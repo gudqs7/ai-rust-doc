@@ -2,7 +2,6 @@ package cn.gudqs7.plugins.rust.helper;
 
 import cn.gudqs7.plugins.common.util.jetbrain.ExceptionUtil;
 import cn.gudqs7.plugins.common.util.jetbrain.IdeaApplicationUtil;
-import cn.gudqs7.plugins.common.util.jetbrain.PsiDocumentUtil;
 import cn.gudqs7.plugins.rust.util.DeepSeekStreamHandler;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -25,18 +24,19 @@ public class GenRustFnDocHelper {
     public static void genRustFnDocBackground(RsFunction rsFunction, Editor editor) {
         Project project = editor.getProject();
         Document document = editor.getDocument();
+        PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+        psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
         try {
             // 删除原注释
-            PsiElement firstChild = rsFunction.getFirstChild();
-            boolean hasComment = firstChild instanceof PsiComment;
-            if (hasComment) {
-                IdeaApplicationUtil.runReadAction(() -> {
-                    IdeaApplicationUtil.runWriteAction(project, () -> {
-                        firstChild.delete();
-                        PsiDocumentUtil.commitAndSaveDocumentEx(document, project);
-                    });
-                });
-            }
+            IdeaApplicationUtil.runWriteAction(project, () -> {
+                @NotNull PsiElement[] children = rsFunction.getChildren();
+                for (PsiElement child : children) {
+                    if (child instanceof PsiComment) {
+                        child.delete();
+                    }
+                }
+            });
+            psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
 
             String text = rsFunction.getText();
             int start = rsFunction.getTextRange().getStartOffset();
@@ -58,7 +58,7 @@ public class GenRustFnDocHelper {
 
     public static void generateByAi(Project project, Document document, @Nullable ProgressIndicator indicator, String text, AtomicInteger startOffset) {
         IdeaApplicationUtil.runWriteAction(project, () -> {
-            String firstLine = "\n//noinspection RsUnresolvedReference\n";
+            String firstLine = "\n";
             document.insertString(startOffset.getAndAdd(firstLine.length()), firstLine);
         });
         DeepSeekStreamHandler.getInstance().streamChat(text, new DeepSeekStreamHandler.StreamCallback() {
@@ -75,6 +75,8 @@ public class GenRustFnDocHelper {
                 fullContent.append(content);
 
                 IdeaApplicationUtil.runWriteAction(project, () -> {
+                    PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+                    psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
                     document.insertString(startOffset.getAndAdd(content.length()), content);
                 });
             }

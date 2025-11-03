@@ -59,7 +59,7 @@ public class DeepSeekStreamHandler {
         connection.setRequestProperty("Accept", "text/event-stream");
         connection.setDoOutput(true);
         connection.setConnectTimeout(30000);
-        connection.setReadTimeout(120000); // 2分钟超时
+        connection.setReadTimeout(120000);
 
         return connection;
     }
@@ -78,10 +78,9 @@ public class DeepSeekStreamHandler {
                 {
                     "model": "deepseek-chat",
                     "messages": [
-                        
                         {
                             "role": "system",
-                             "content": "你是一个专业的给rust函数写中文文档的专家,只返回注释 不用```包裹注释"
+                             "content": "你是一个专业的给rust函数写中文文档的专家,只返回注释 不用```包裹注释; 注意把示例的代码标记为 ```plain 而非 rust"
                         },
                         {
                             "role": "user",
@@ -136,7 +135,7 @@ public class DeepSeekStreamHandler {
             JsonNode root = mapper.readTree(jsonData);
             JsonNode choices = root.path("choices");
 
-            if (choices.isArray() && choices.size() > 0) {
+            if (choices.isArray() && !choices.isEmpty()) {
                 JsonNode choice = choices.get(0);
                 JsonNode delta = choice.path("delta");
 
