@@ -61,13 +61,13 @@ public class RustBatchGenDocAction extends AbstractRustAction {
 
             for (RsFile rsFile : rustFileList) {
                 String fileName = rsFile.getName();
-                new Task.Backgroundable(project, "给 " + fileName + " 生成函数文档中...", true) {
+                new Task.Backgroundable(project, "Generating function documentation for " + fileName + "...", true) {
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
                         handleRustFile(rsFile, project, indicator);
-                        NotificationUtil.showTips("文件 " + fileName + " 的函数文档生成完毕~");
+                        NotificationUtil.showTips("The function documentation for the file " + fileName + " has been generated~");
                     }
-                }.setCancelText("停止生成").queue();
+                }.setCancelText("Stop Generating.").queue();
             }
 
         } catch (Throwable throwable) {

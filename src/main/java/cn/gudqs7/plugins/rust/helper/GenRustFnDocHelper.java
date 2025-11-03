@@ -45,7 +45,7 @@ public class GenRustFnDocHelper {
                 lineStartOffset = start;
             }
             AtomicInteger startOffset = new AtomicInteger(lineStartOffset - 1);
-            new Task.Backgroundable(project, "生成函数文档中...", true) {
+            new Task.Backgroundable(project, "Generating function documentation...", true) {
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
                     generateByAi(project, document, indicator, text, startOffset);

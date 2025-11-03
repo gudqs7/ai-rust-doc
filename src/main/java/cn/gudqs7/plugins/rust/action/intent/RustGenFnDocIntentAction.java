@@ -23,12 +23,12 @@ public class RustGenFnDocIntentAction extends RsElementBaseIntentionAction<RustG
 
     @Override
     public @NotNull @IntentionFamilyName String getFamilyName() {
-        return "AI生成函数文档";
+        return "Generate doc by ai";
     }
 
     @Override
     public @NotNull @IntentionName String getText() {
-        return "AI生成函数文档";
+        return "Generate doc by ai";
     }
 
     /**
@@ -68,7 +68,7 @@ public class RustGenFnDocIntentAction extends RsElementBaseIntentionAction<RustG
             if (rsFunction != null) {
                 Document document = editor.getDocument();
                 if (!ApplicationManager.getApplication().isWriteAccessAllowed()) {
-                    document.insertString(0, "/// AI生成, 无法预览\n");
+                    document.insertString(0, "/// AI-generated, cannot preview\n");
                     return;
                 }
                 GenRustFnDocHelper.genRustFnDocBackground(rsFunction, editor);
