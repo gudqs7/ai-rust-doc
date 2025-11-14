@@ -80,7 +80,7 @@ public class DeepSeekStreamHandler {
                     "messages": [
                         {
                             "role": "system",
-                             "content": "你是一个专业的给rust函数写中文文档的专家,只返回注释 不用```包裹注释; 另外不要生成示例, 篇幅尽量简洁"
+                             "content": "你是一个专业的给rust函数写中文文档的专家,只返回注释 不用```包裹注释; 另外不要生成示例"
                         },
                         {
                             "role": "user",

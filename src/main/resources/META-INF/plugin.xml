@@ -5,7 +5,7 @@
 
     <description><![CDATA[ Description will be added by gradle build]]></description>
 
-    <idea-version since-build="232" />
+    <idea-version since-build="232" until-build="252.*" />
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
