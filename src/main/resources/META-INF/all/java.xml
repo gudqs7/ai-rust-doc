@@ -7,11 +7,11 @@
 
     <actions>
 
-        <group id="cn.gudqs.docer.savior" text="AiRustDoc Group">
+        <group id="cn.gudqs.idea.struct" text="AiRustDoc Group">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="ShowIntentionsGroup"/>
 
             <action id="cn.gudqs7.rust.right.java2struct" class="cn.gudqs7.plugins.java.action.right.JavaToRustRightClickAction"
-                    text="Generate Rust Struct" description="Generate rust struct by java class">
+                    text="生成 Rust 结构" description="Generate rust struct by java class">
             </action>
         </group>
 

@@ -14,12 +14,12 @@
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="ShowIntentionsGroup"/>
 
             <action id="cn.gudqs.rust.savior.gen.doc" class="cn.gudqs7.plugins.rust.action.right.RustGenFnDocRightClickAction"
-                    text="Generate Doc By AI" description="Generate documentation for rust function">
+                    text="AI生成文档注释" description="Generate documentation for rust function">
                 <keyboard-shortcut keymap="$default" first-keystroke="alt BACK_SLASH" />
                 <keyboard-shortcut keymap="$default" first-keystroke="ctrl BACK_SLASH"/>
             </action>
             <action id="cn.gudqs.rust.savior.gen.ts" class="cn.gudqs7.plugins.rust.action.right.RustStructToTsRightClickAction"
-                    text="Convert Struct/Enum to typescript" description="Generate ts interface/type by rust struct/enum">
+                    text="转成TypeScript" description="Generate ts interface/type by rust struct/enum">
             </action>
         </group>
 
@@ -27,7 +27,7 @@
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CutCopyPasteGroup"/>
 
             <action id="cn.gudqs.rust.savior.project.gen.doc" class="cn.gudqs7.plugins.rust.action.right.RustBatchGenDocAction"
-                    text="Batch Generate Doc By AI" description="Batch Generate documentation for rust function">
+                    text="批量生成文档注释" description="Batch Generate documentation for rust function">
             </action>
         </group>
 
