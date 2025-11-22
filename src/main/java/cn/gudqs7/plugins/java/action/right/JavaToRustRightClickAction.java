@@ -1,12 +1,11 @@
 package cn.gudqs7.plugins.java.action.right;
 
 import cn.gudqs7.plugins.java.action.base.AbstractJavaRightClickAction;
+import cn.gudqs7.plugins.java.util.PsiAnnotationUtil;
 import cn.gudqs7.plugins.rust.util.StringTool;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,7 +53,7 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
         }
         hasGenSet.add(className);
 
-        structSbf.append("\n#[derive(Serialize, Deserialize, Clone, Debug, Default)]\n");
+        structSbf.append("\n#[derive(Serialize, Deserialize, Clone, Data, Reflect)]\n");
         structSbf.append("#[serde(rename_all = \"camelCase\")]\n");
         structSbf.append("pub struct ").append(className).append(" {\n");
 
@@ -66,9 +65,34 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
             PsiType psiType = psiField.getType();
             String typeName = psiType.getPresentableText();
 
+            PsiModifierList modifierList = psiField.getModifierList();
+            if (modifierList != null) {
+                if (modifierList.hasModifierProperty(PsiModifier.STATIC)) {
+                    continue;
+                }
+            }
+
             if (psiType instanceof PsiClassReferenceType psiClassReferenceType) {
                 PsiClass resolveClass = psiClassReferenceType.resolve();
                 waitList.add(resolveClass);
+            }
+
+            String reflectFieldInfo = "";
+            PsiAnnotation jsonAnnotation = psiField.getAnnotation("com.alibaba.fastjson.annotation.JSONField");
+            if (jsonAnnotation != null) {
+                String jsonFieldName = PsiAnnotationUtil.getAnnotationValue(jsonAnnotation, "name", null);
+                if (StringUtils.isNotBlank(jsonFieldName)) {
+                    reflectFieldInfo = "    #[reflect(@LuaField::new(\"" + jsonFieldName + "\"))]\n";
+                }
+            }
+
+            String dbFieldInfo = "";
+            PsiAnnotation dbAnnotation = psiField.getAnnotation("a.a.a.ExcelProperty");
+            if (dbAnnotation != null) {
+                List<String> dbValueList = PsiAnnotationUtil.getAnnotationListValue(dbAnnotation, "value");
+                if (dbValueList != null && !dbValueList.isEmpty()) {
+                    dbFieldInfo = "    #[reflect(@DbField::new(\"" + dbValueList.get(0) + "\"))]\n";
+                }
             }
 
             System.out.println("fieldName = " + fieldName);
@@ -126,7 +150,7 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
                     break;
             }
 
-            structSbf.append("    ").append(StringTool.camelCaseToLine(fieldName))
+            structSbf.append(reflectFieldInfo).append(dbFieldInfo).append("    ").append(StringTool.camelCaseToLine(fieldName))
                     .append(": ").append(rustType).append(",\n");
         }
         structSbf.append("}\n");
