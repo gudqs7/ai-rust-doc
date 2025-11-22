@@ -65,10 +65,14 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
             PsiType psiType = psiField.getType();
             String typeName = psiType.getPresentableText();
 
+            boolean isTransient = false;
             PsiModifierList modifierList = psiField.getModifierList();
             if (modifierList != null) {
                 if (modifierList.hasModifierProperty(PsiModifier.STATIC)) {
                     continue;
+                }
+                if (modifierList.hasModifierProperty(PsiModifier.TRANSIENT)) {
+                    isTransient = true;
                 }
             }
 
@@ -93,6 +97,11 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
                 if (dbValueList != null && !dbValueList.isEmpty()) {
                     dbFieldInfo = "    #[reflect(@DbField::new(\"" + dbValueList.get(0) + "\"))]\n";
                 }
+            }
+
+            String transientInfo = "";
+            if (isTransient) {
+                transientInfo = "    #[reflect(ignore)]\n    #[serde(skip)]\n";
             }
 
             System.out.println("fieldName = " + fieldName);
@@ -150,7 +159,7 @@ public class JavaToRustRightClickAction extends AbstractJavaRightClickAction {
                     break;
             }
 
-            structSbf.append(reflectFieldInfo).append(dbFieldInfo).append("    ").append(StringTool.camelCaseToLine(fieldName))
+            structSbf.append(transientInfo).append(reflectFieldInfo).append(dbFieldInfo).append("    ").append(StringTool.camelCaseToLine(fieldName))
                     .append(": ").append(rustType).append(",\n");
         }
         structSbf.append("}\n");
